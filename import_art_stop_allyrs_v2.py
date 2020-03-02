@@ -6,7 +6,7 @@ from nltk.tokenize import word_tokenize
 
 #This function will take in an article name, and output the text
 def import_article(fname1,english_words,stop_words):
-    os.chdir('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/WSJ_txt')
+    os.chdir('/Users/ayushagarwal/deepjump/WSJ_txt')
 
     #print(fname1)
 
@@ -174,8 +174,7 @@ def import_article(fname1,english_words,stop_words):
 
     #Tokenize the sentence
     word_tokens = word_tokenize(article2)
-
-    filt_doc = [w for w in word_tokens if not w in stop_words]
+    print(stop_words)
+    filt_doc = [w for w in word_tokens] #if not w in stop_words]
     article2 = ' '.join(filt_doc)
-
     return article2

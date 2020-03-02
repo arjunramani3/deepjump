@@ -174,5 +174,4 @@ def cleaning_code(article):
 
   #remove all 1 letter words
   article=' '.join([w for w in article.split() if len(w) > 1])
-
   return article
