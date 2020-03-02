@@ -64,7 +64,7 @@ def cleaning_code(article):
   for month in months:
     article = re.sub(r'%s' % re.escape(month), ' ', article, flags=re.IGNORECASE)
 
-  # repeat for days of the weel, and the corresponding abbreviations
+  # repeat for days of the week, and the corresponding abbreviations
   days = [' sun. ', ' mon. ', ' tu. ', ' tue. ', ' tues. ', ' wed. ', ' th. ',
           ' thu. ', ' thur. ', ' thurs. ', ' fri. ', ' sat. ']
   for day in days:
