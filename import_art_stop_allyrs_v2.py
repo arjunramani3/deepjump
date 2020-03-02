@@ -6,7 +6,7 @@ from nltk.tokenize import word_tokenize
 
 #This function will take in an article name, and output the text
 def import_article(fname1,english_words,stop_words):
-    os.chdir('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/WSJ_txt')
+    os.chdir('WSJ_txt')
 
     #print(fname1)
 

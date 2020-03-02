@@ -7,7 +7,7 @@ firstnwords=100
 
 #Read the dicationary of all english words
 def load_words():
-    with open('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/pythoncode/words_alpha.txt') as word_file:
+    with open('words_alpha.txt') as word_file:
         valid_words = set(word_file.read().split())
     return valid_words
 
@@ -18,7 +18,7 @@ english_words = load_words()
 stop_words = set(stopwords.words('english'))
 
 arts = []
-for fname1 in os.listdir('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/WSJ_txt'):
+for fname1 in os.listdir('WSJ_txt'):
     #print(fname1)
     arts.append(fname1)
 
@@ -88,7 +88,7 @@ tdict=dict.fromkeys(wordSet2, 0)
 for word in mdoc:
     tdict[word] +=1
 bigdict=pd.DataFrame.from_dict(tdict, orient='index')
-bigdict.to_csv('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/wordcounts_f100.csv')
+bigdict.to_csv('wordcounts_f100.csv')
 
 #Inputs -- a dictionary, and a list with words
 def computeTF(wordDict, bow):
@@ -155,4 +155,4 @@ outputdf=pd.DataFrame(tfidfs)
 
 outputdf['fname'] = pd.Series(arts, index=outputdf.index)
 
-outputdf.to_csv('C:/Users/mcsam/Dropbox/Country Data/Stock Moves/Final Data for Paper/tfidftest_f100.csv')
+outputdf.to_csv('tfidftest_f100.csv')
