@@ -18,7 +18,7 @@ english_words = load_words()
 stop_words = set(stopwords.words('english'))
 
 arts = []
-for fname1 in os.listdir('WSJ_txt'):
+for fname1 in os.listdir('WSJ_txt'): #os.lisdir() gives the pathnames of all entries in a directory
     #print(fname1)
     arts.append(fname1)
 
