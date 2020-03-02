@@ -181,8 +181,7 @@ def import_article(fname1,english_words,stop_words):
 
     #Tokenize the sentence
     word_tokens = word_tokenize(article2)
-
-    filt_doc = [w for w in word_tokens if not w in stop_words]
+    print(stop_words)
+    filt_doc = [w for w in word_tokens] #if not w in stop_words]
     article2 = ' '.join(filt_doc)
-
     return article2

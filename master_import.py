@@ -7,7 +7,7 @@ firstnwords=100
 
 #Read the dicationary of all english words
 def load_words():
-    with open('words_alpha.txt') as word_file:
+    with open('./words_alpha.txt') as word_file:
         valid_words = set(word_file.read().split())
     return valid_words
 
@@ -18,7 +18,7 @@ english_words = load_words()
 stop_words = set(stopwords.words('english'))
 
 arts = []
-for fname1 in os.listdir('WSJ_txt'): #os.lisdir() gives the pathnames of all entries in a directory
+for fname1 in os.listdir('./WSJ_txt'):
     #print(fname1)
     arts.append(fname1)
 
@@ -26,9 +26,12 @@ for fname1 in os.listdir('WSJ_txt'): #os.lisdir() gives the pathnames of all ent
 docs=[]
 docs_intact=[]
 for art in arts:
+    #print("PATH IS: " + str(art))
     rawart=import_article(art,english_words,stop_words)
     #In this code, I want to take the first X words -- start with 100, can later do more
     #print(len(rawart.split(" ")))
+    #print("RAW ARTICLE: ")
+    #print(rawart)
     firstp=rawart.split(" ")[0:firstnwords]
     combfirst=" ".join(firstp)
     docs.append(firstp)
@@ -88,7 +91,7 @@ tdict=dict.fromkeys(wordSet2, 0)
 for word in mdoc:
     tdict[word] +=1
 bigdict=pd.DataFrame.from_dict(tdict, orient='index')
-bigdict.to_csv('wordcounts_f100.csv')
+bigdict.to_csv('./wordcounts_f100.csv')
 
 #Inputs -- a dictionary, and a list with words
 def computeTF(wordDict, bow):
@@ -161,4 +164,4 @@ outputdf=pd.DataFrame(tfidfs)
 
 outputdf['fname'] = pd.Series(arts, index=outputdf.index)
 
-outputdf.to_csv('tfidftest_f100.csv')
+outputdf.to_csv('./tfidftest_f100.csv')
