@@ -4,8 +4,15 @@ import re
 from cleaning_code_expanded import cleaning_code
 from nltk.tokenize import word_tokenize
 
-#This function will take in an article name, and output the text
+#This function will take in an article name, and output the text of the article
+#Only keeps sentences with >=3 words, words with >= 3 chars, english words, and non-stop words
 def import_article(fname1,english_words,stop_words):
+    """ import_article function
+    @param frame1 (string): name of the article
+    @param english_words (list of strings): list of english words to keep
+    @param stop_words (list of string): list of stop words to filter out
+    @returns article2 (list of strings): a tokenized list of words (string) 
+    """
     os.chdir('WSJ_txt')
 
     #print(fname1)
@@ -136,7 +143,7 @@ def import_article(fname1,english_words,stop_words):
     #Note -- this is not perfect -- sometimes commas get read as periods for the old articles
 
     #Create a list to put the sentences back into
-    sents2=[]
+    sentences=[]
 
     #Loop over sentences
     for sent in sents:
@@ -167,9 +174,9 @@ def import_article(fname1,english_words,stop_words):
             # Going to apply an additional filter -- to be added to the reconstructed article,
             # need at least 3 words in a sentence
             if len(sent2.split()) > 3:
-                sents2.append(sent2)
+                sentences.append(sent2)
 
-    article2=' '.join(sents2)
+    article2=' '.join(sentences)
     article2 = re.sub(r'\s\s', ' ', article2, flags=re.MULTILINE)
 
     #Tokenize the sentence

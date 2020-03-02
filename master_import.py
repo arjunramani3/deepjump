@@ -111,6 +111,12 @@ for i in range(0,len(arts)):
 #Compute idf
 #Inputs: list where each element is a document
 def computeIDF(docList):
+    """ computeIDF function
+    @param frame1 (string): name of the article
+    @param english_words (list of strings): list of english words to keep
+    @param stop_words (list of string): list of stop words to filter out
+    @returns article2 (list of strings): a tokenized list of words (string) 
+    """
     #Don't think I need to create the empty idf
     #idfDict = {}
     #Count number of documents
