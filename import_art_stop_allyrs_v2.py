@@ -13,7 +13,7 @@ def import_article(fname1,english_words,stop_words):
     @param stop_words (list of string): list of stop words to filter out
     @returns article2 (list of strings): a tokenized list of words (string) 
     """
-    os.chdir('WSJ_txt')
+    os.chdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')
 
     #print(fname1)
 
@@ -181,7 +181,7 @@ def import_article(fname1,english_words,stop_words):
 
     #Tokenize the sentence
     word_tokens = word_tokenize(article2)
-    print(stop_words)
+    #print(stop_words)
     filt_doc = [w for w in word_tokens] #if not w in stop_words]
     article2 = ' '.join(filt_doc)
     return article2

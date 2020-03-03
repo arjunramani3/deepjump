@@ -1,12 +1,12 @@
+# -*- coding: utf-8 -*-
 import re
-
 
 # Remove terms in the headers/footers of feach article
 # Marco note: something weird about the further reproduction thing, I can't figure out why I need both b/c ignore case is on
 def cleaning_code(article):
-    # cleaning_code function
-    # @param article (list of strings): a tokenized list of words (string)
-    # @returns article2 (list of strings): a tokenized list of words (string) 
+  """cleaning_code function
+    @param article (list of strings): a tokenized list of words (string)
+    @returns article2 (list of strings): a tokenized list of words (string)"""
     
   remlist = ['Reproduced with permission of the copyright owner', 'Wall Street Journal(1889 - 1922);',
               'ProQuest Historical Newspapers: The Wall Street Journal', 'Wall Street Journal(1923 - Current file);',
