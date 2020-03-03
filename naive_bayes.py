@@ -32,10 +32,10 @@ def load_labels():
     labels = pd.read_csv('./jumps_by_day.csv')
     labs = ['Corporate', 'Govspend', 'Trade', 'Macro', 'Monetary', 'Sovmil']
     lab_map = {name : i for i, name in enumerate(labs)} #Create dicitonary mapping labs to indices
-    print(lab_map)
+    #print(lab_map)
     cols_to_keep = ['Date', 'Return'] + labs #specification in paper
     labels = labels[cols_to_keep]
-    labels['Date'] = pd.to_datetime(labels['Date'], infer_datetime_format=True)
+    labels['Date'] = pd.to_datetime(labels['Date'], errors='coerce', infer_datetime_format=True)
     labels['Sum'] = labels[labs].sum(axis=1)
     labels = labels[labels['Sum'] > 0]
     labels['Max'] = labels[labs].idxmax(axis=1) #Max column has label to keep
@@ -50,10 +50,11 @@ def load_articles(narts=5, nwords = 100):
     @param narts (int): the number of articles to store in the labeled dataframe
     @param nwords (int): the number of words to keep in each article
     @return labeled_articles (DataFrame): a dataframe with aritcle clippings and associated labels"""
+    #print('narts = ' + str(narts))
     english_words = load_eng_words()
     stop_words = set(stopwords.words('english'))
     labels = load_labels()
-    print(labels.head())
+    #print(labels.head())
     articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
     for i, art in enumerate(os.listdir('./WSJ_txt')):
         #print(art)
@@ -62,15 +63,36 @@ def load_articles(narts=5, nwords = 100):
         #print(len(rawart.split(" ")))
         #print("RAW ARTICLE: " + str(rawart))
         firstn=rawart.split(" ")[0:nwords]
+        firstn = " ".join(firstn) #if our input is a text with spaces
         #print(firstn)
         slug = art.split('.')[0]
         articles.loc[i] = slug, firstn
     #print(labels.head())
-    articles['Date'] = pd.to_datetime(articles['Date'], format='%Y_%m_%d') 
+    articles['Date'] = articles['Date'].str.replace('_', '/')
+    print(articles['Date'])
+    articles['Date'] = pd.to_datetime(articles['Date'], errors='coerce', format='%Y/%m/%d') 
     labeled_articles = labels.merge(articles, left_on = 'Date', right_on = 'Date')
+    print(len(labeled_articles))
     return labeled_articles
 
 
-#####Main Code#####
-labeled_articles = load_articles(5, 100)
-print(labeled_articles['Max'])
+#####Implementing Naive Bayes#####
+labeled_articles = load_articles(1000, 100)
+print(labeled_articles.head())
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=1)
+
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(strip_accents='ascii', token_pattern=u'(?ui)\\b\\w*[a-z]+\\w*\\b', lowercase=True, stop_words='english')
+X_train_cv = cv.fit_transform(X_train)
+X_test_cv = cv.transform(X_test)
+
+from sklearn.naive_bayes import MultinomialNB
+naive_bayes = MultinomialNB()
+naive_bayes.fit(X_train_cv, y_train)
+predictions = naive_bayes.predict(X_test_cv)
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score
+print('Accuracy score: ', accuracy_score(y_test, predictions))
+print('Recall score: ', recall_score(y_test, predictions, average = 'macro'))
+print('Precision score: ', precision_score(y_test, predictions, average = 'weighted'))

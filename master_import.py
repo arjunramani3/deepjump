@@ -42,8 +42,7 @@ for art in arts:
 wordSet = set().union(*docs)
 print(len(wordSet))
 
-from sklearn.feature_extraction.text import CountVectorizer
-#Cut out things that only appear in 1 document -- max_df=0.95 -- common stuff should be dealt with by the tfidf
+f2ings that only appear in 1 document -- max_df=0.95 -- common stuff should be dealt with by the tfidf
 #cv = CountVectorizer(min_df=2, max_df=0.90, lowercase=True)
 cv = CountVectorizer(min_df=2, max_df=0.80, lowercase=True)
 
