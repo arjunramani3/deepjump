@@ -42,8 +42,7 @@ for art in arts:
 wordSet = set().union(*docs)
 print(len(wordSet))
 
-from sklearn.feature_extraction.text import CountVectorizer
-#Cut out things that only appear in 1 document -- max_df=0.95 -- common stuff should be dealt with by the tfidf
+f2ings that only appear in 1 document -- max_df=0.95 -- common stuff should be dealt with by the tfidf
 #cv = CountVectorizer(min_df=2, max_df=0.90, lowercase=True)
 cv = CountVectorizer(min_df=2, max_df=0.80, lowercase=True)
 
@@ -114,6 +113,12 @@ for i in range(0,len(arts)):
 #Compute idf
 #Inputs: list where each element is a document
 def computeIDF(docList):
+    """ computeIDF function
+    @param frame1 (string): name of the article
+    @param english_words (list of strings): list of english words to keep
+    @param stop_words (list of string): list of stop words to filter out
+    @returns article2 (list of strings): a tokenized list of words (string) 
+    """
     #Don't think I need to create the empty idf
     #idfDict = {}
     #Count number of documents

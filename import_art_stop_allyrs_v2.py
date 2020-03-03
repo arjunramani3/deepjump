@@ -4,9 +4,16 @@ import re
 from cleaning_code_expanded import cleaning_code
 from nltk.tokenize import word_tokenize
 
-#This function will take in an article name, and output the text
+#This function will take in an article name, and output the text of the article
+#Only keeps sentences with >=3 words, words with >= 3 chars, english words, and non-stop words
 def import_article(fname1,english_words,stop_words):
-    os.chdir('/Users/ayushagarwal/deepjump/WSJ_txt')
+    """ import_article function
+    @param frame1 (string): name of the article
+    @param english_words (list of strings): list of english words to keep
+    @param stop_words (list of string): list of stop words to filter out
+    @returns article2 (list of strings): a tokenized list of words (string) 
+    """
+    os.chdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')
 
     #print(fname1)
 
@@ -24,7 +31,7 @@ def import_article(fname1,english_words,stop_words):
     s3='Wall Street Journal(1923 - Current file);'
     #Fix for problem with wsj import
     s4='ProQuest Historical Newspapers:'
-    #Deal with the aditional format
+    #Deal with the aditional format™£
     sn1='Abstract Translate'
     sn2='Full Text Translate'
     sn3='Word count'
@@ -79,7 +86,7 @@ def import_article(fname1,english_words,stop_words):
     #else:
     #    print('No Header')
     elif fn1!=-1 and fn2!=-1 and fn3!=-1:
-        print("new")
+        #print("new")
         b1=article.split(sn2)
         #Take after full text translate
         tart=b1[1]
@@ -87,7 +94,7 @@ def import_article(fname1,english_words,stop_words):
         #take part before the word count
         article = tart2[0]
     elif fn1!=-1 and fn5!=-1 and fn4!=-1:
-        print("new (no ct)")
+        #print("new (no ct)")
         b1 = article.split(sn5)
         # Take after full text translate
         tart = b1[1]
@@ -95,7 +102,7 @@ def import_article(fname1,english_words,stop_words):
         # take part before the word count
         article = tart2[0]
     elif fnn1!=-1 and fnn2!=-1:
-        print("newest")
+        #print("newest")
         b1 = article.split(snn1)
         # Take after full text
         tart = b1[1]
@@ -103,7 +110,7 @@ def import_article(fname1,english_words,stop_words):
         # take part before the details
         article = tart2[0]
     elif nu!=-1 and nu2!=-1 and fnn1==-1 and fn2==-1 and fn1==-1 and fnn2==-1:
-        print("nu format")
+        #print("nu format")
         b1 = article.split(nuformat)
         # Take after full text
         tart = b1[1]
@@ -136,7 +143,7 @@ def import_article(fname1,english_words,stop_words):
     #Note -- this is not perfect -- sometimes commas get read as periods for the old articles
 
     #Create a list to put the sentences back into
-    sents2=[]
+    sentences=[]
 
     #Loop over sentences
     for sent in sents:
@@ -167,14 +174,14 @@ def import_article(fname1,english_words,stop_words):
             # Going to apply an additional filter -- to be added to the reconstructed article,
             # need at least 3 words in a sentence
             if len(sent2.split()) > 3:
-                sents2.append(sent2)
+                sentences.append(sent2)
 
-    article2=' '.join(sents2)
+    article2=' '.join(sentences)
     article2 = re.sub(r'\s\s', ' ', article2, flags=re.MULTILINE)
 
     #Tokenize the sentence
     word_tokens = word_tokenize(article2)
-    print(stop_words)
+    #print(stop_words)
     filt_doc = [w for w in word_tokens] #if not w in stop_words]
     article2 = ' '.join(filt_doc)
     return article2
