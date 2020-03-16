@@ -78,18 +78,16 @@ def load_eda(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = T
 
 def test(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50):
     #####Implementing Naive Bayes w/EDA#####
+    print('running with parameters' + str((narts, nwords, min_word_length, filter_stop_words)))
     labeled_articles = load_articles(narts, nwords, min_word_length, filter_stop_words) #baseline spec is (1000,100)
     from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=2018, test_size = .1)
 
     X_train = list(X_train)
     print('old train size = ' + str(len(X_train)))
-    extra_articles = get_augmented(X_train, replace_words) #extra_articles returns a list with just the Words column augmented
-    #print('X_train = ' + str(X_train))
-    #print('extra_articles = ' + str(extra_articles))
-    X_train = X_train + extra_articles
-    #print('X_train = ' + str(X_train))
-    y_train = list(y_train) + list(y_train)
+    extra_articles = get_augmented(X_train, replace_words) #extra_articles returns a list of new articles
+    X_train = X_train + extra_articles #concatenate the old and new articles
+    y_train = list(y_train) + list(y_train) #apply the same labels to the old and new versions
     print('new train size = ' + str(len(X_train)))
 
     print('test size = ' + str(len(y_test)))
