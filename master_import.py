@@ -27,7 +27,7 @@ docs=[]
 docs_intact=[]
 for art in arts:
     #print("PATH IS: " + str(art))
-    rawart=import_article(art,english_words,stop_words)
+    rawart=import_article(art, english_words, stop_words, min_word_length = 3)
     #In this code, I want to take the first X words -- start with 100, can later do more
     #print(len(rawart.split(" ")))
     #print("RAW ARTICLE: ")
