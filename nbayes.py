@@ -107,10 +107,10 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
-    #test(1000, 200, 3, True)
-    test(10, 10, 2, True)
-    #test(1000, 200, 3, False)
-    #test(1000, 200, 2, False)
+    test(1100, 100, 3, True)
+    test(1100, 100, 2, True)
+    test(1100, 100, 3, False)
+    test(1100, 100, 2, False)
 
 if __name__ == "__main__":
     main()

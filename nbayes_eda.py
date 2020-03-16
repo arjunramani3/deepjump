@@ -113,3 +113,7 @@ def test(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True,
 
 if __name__ == "__main__":
     test(narts = 1100, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50)
+    test(1100, 100, 3, True, 50)
+    test(1100, 100, 2, True, 50)
+    test(1100, 100, 3, False, 50)
+    test(1100, 100, 2, False, 50)
