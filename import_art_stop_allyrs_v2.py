@@ -6,11 +6,13 @@ from nltk.tokenize import word_tokenize
 
 #This function will take in an article name, and output the text of the article
 #Only keeps sentences with >=3 words, words with >= 3 chars, english words, and non-stop words
-def import_article(fname1,english_words,stop_words):
+def import_article(fname1, english_words, stop_words, min_word_length, filter_stop_words):
     """ import_article function
     @param frame1 (string): name of the article
     @param english_words (list of strings): list of english words to keep
     @param stop_words (list of string): list of stop words to filter out
+    @param min_word_length (int): the minimum number of characters in a word (all words with length < min_word_length will be filtered)
+    @param filter_stop_words (boolean): a flag indicating whether to filter stop_words 
     @returns article2 (list of strings): a tokenized list of words (string) 
     """
     os.chdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')
@@ -126,7 +128,7 @@ def import_article(fname1,english_words,stop_words):
     #I think there are still some upper/lower case issues -- if we don't care about proper nouns, do this for now
     article=article.lower()
 
-    article=cleaning_code(article)
+    article=cleaning_code(article) #imported function from cleaning_code_expanded.py
 
     whitelist = set('abcdefghijklmnopqrstuvwxy ABCDEFGHIJKLMNOPQRSTUVWXYZ \.')
     article = ''.join(filter(whitelist.__contains__, article))
@@ -134,7 +136,7 @@ def import_article(fname1,english_words,stop_words):
 
     #Filter multiple periods in a row, these also help filter tables of returns
     #can't get all at once, so need to loop (deals with more than two periods in a row)
-    for i in range (0,12):
+    for i in range(0,12):
         article = re.sub(r'\.\.', '.', article, flags=re.MULTILINE)
     #Still have some sentences with nothing in them -- these will get filtered out later anyway so it is okay
 
@@ -147,22 +149,17 @@ def import_article(fname1,english_words,stop_words):
 
     #Loop over sentences
     for sent in sents:
-        #making everything lowercase to make checking typos easier
-        sent=sent.lower()
-        #print(sent)
-        #Split words on spaces
-        words=sent.split(" ")
+        sent=sent.lower() #making everything lowercase to make checking typos easier
+        words=sent.split(" ") #Split words on spaces
 
         #Before blank strings i.e. "" were getting counted as typos, this should remove them
         words =list(filter(None, words))
         #Re-construct sentence w/o typos
         sent2 = ""
-
         for word in words:
-            # If english, add back, otherwise add to typos
-            if (word in english_words):
-                # Adding an additional filter -- All words at least 3 letters
-                if (len(word) > 2):
+            if (word in english_words): # If english, add back, otherwise add to typos
+                ######1. Filter words with less than min_word_length chars######
+                if (len(word) >= min_word_length):
                     sent2 = sent2 + " " + word
 
         # Need to again remove 1 letter words -- even though they are not typos don't want them
@@ -181,7 +178,9 @@ def import_article(fname1,english_words,stop_words):
 
     #Tokenize the sentence
     word_tokens = word_tokenize(article2)
-    #print(stop_words)
-    filt_doc = [w for w in word_tokens] #if not w in stop_words]
+    #####2. Filter out stop_words if filter_stop_words flag is True#####
+    filt_doc = word_tokens
+    if filter_stop_words:
+        filt_doc = [w for w in filt_doc if not w in stop_words]
     article2 = ' '.join(filt_doc)
     return article2

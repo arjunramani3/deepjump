@@ -7,6 +7,7 @@ from nltk.corpus import stopwords
 import numpy as np
 from nbayes import load_eng_words, load_labels
 import codecs
+from eda1 import get_augmented
 
 #Steps 
 #2. Loop through articles
@@ -20,10 +21,12 @@ import codecs
 #read in articles using import_article and labels with load_labels. Take first nwords of each article
 #and create dataframe with columns Date, Words (the words in the article), [labels] where [labels] is 
 #the set of labels kept from load_labels
-def load_articles(narts=5, nwords = 100):
+def load_articles(narts=5, nwords = 100, min_word_length = 2, filter_stop_words = True):
     """load_articles function
     @param narts (int): the number of articles to store in the labeled dataframe
     @param nwords (int): the number of words to keep in each article
+    @param min_word_length (int): the minimum number of characters in a word (all words with length < min_word_length will be filtered)
+    @param filter_stop_words (boolean): a flag indicating whether to filter stop_words 
     @return labeled_articles (DataFrame): a dataframe with aritcle clippings and associated labels"""
     #print('narts = ' + str(narts))
     english_words = load_eng_words()
@@ -34,7 +37,7 @@ def load_articles(narts=5, nwords = 100):
     for i, art in enumerate(os.listdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')):
         #print(art)
         if i > narts: break
-        rawart=import_article(art,english_words,stop_words)
+        rawart=import_article(art,english_words,stop_words, min_word_length, filter_stop_words)
         firstn=rawart.split(" ")[0:nwords]
         firstn = " ".join(firstn) #if our input is a text with spaces
         slug = art.split('.')[0]
@@ -47,7 +50,13 @@ def load_articles(narts=5, nwords = 100):
     #print(len(labeled_articles))
     return labeled_articles
 
-def load_eda(narts = 5, nwords = 100):
+def load_eda(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True):
+    """load_eda function
+    @param narts (int): the number of articles to store in the labeled dataframe
+    @param nwords (int): the number of words to keep in each article
+    @param min_word_length (int): the minimum number of characters in a word (all words with length < min_word_length will be filtered)
+    @param filter_stop_words (boolean): a flag indicating whether to filter stop_words 
+    @return labeled_articles (DataFrame): a dataframe with artcle clippings and associated labels"""
     labels = load_labels()
     articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
     for i, art in enumerate(os.listdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_augment_txt')):
@@ -67,16 +76,22 @@ def load_eda(narts = 5, nwords = 100):
     return labeled_articles
 
 
-def main():
-    #####Implementing Naive Bayes#####
-    labeled_articles = load_articles(1000, 100)
-    extra_articles = load_eda(1000,100)
-    labeled_articles = labeled_articles.append(extra_articles)
-    print(labeled_articles.head())
-    print(len(labeled_articles))
+def test(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50):
+    #####Implementing Naive Bayes w/EDA#####
+    labeled_articles = load_articles(narts, nwords, min_word_length, filter_stop_words) #baseline spec is (1000,100)
     from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=1)
-    print('train size = ' + str(len(X_train)))
+    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=2018, test_size = .1)
+
+    X_train = list(X_train)
+    print('old train size = ' + str(len(X_train)))
+    extra_articles = get_augmented(X_train, replace_words) #extra_articles returns a list with just the Words column augmented
+    #print('X_train = ' + str(X_train))
+    #print('extra_articles = ' + str(extra_articles))
+    X_train = X_train + extra_articles
+    #print('X_train = ' + str(X_train))
+    y_train = list(y_train) + list(y_train)
+    print('new train size = ' + str(len(X_train)))
+
     print('test size = ' + str(len(y_test)))
 
     from sklearn.feature_extraction.text import CountVectorizer
@@ -93,8 +108,8 @@ def main():
     print('Accuracy score: ', accuracy_score(y_test, predictions))
     print('Recall score: ', recall_score(y_test, predictions, average = 'macro'))
     print('Precision score: ', precision_score(y_test, predictions, average = 'weighted'))
-    print(pd.Series(y_test).value_counts())
-    print(pd.Series(predictions).value_counts())
+    # print(pd.Series(y_test).value_counts())
+    # print(pd.Series(predictions).value_counts())
 
 if __name__ == "__main__":
-    main()
+    test(narts = 1100, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50)
