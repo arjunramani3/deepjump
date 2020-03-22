@@ -30,7 +30,7 @@ def load_labels():
         @returns labels (dataframe of slug, label) tuples"""
 
     labels = pd.read_csv('/Users/arjun/Documents/cs224n/deepjump/jumps_by_day.csv')
-    labs = ['Commodities', 'Corporate', 'Govspend', 'Macro', 'Monetary', 'Sovmil']
+    labs = ['Corporate', 'Govspend', 'Macro', 'Monetary', 'Sovmil']
     lab_map = {name : i for i, name in enumerate(labs)} #Create dicitonary mapping labs to indices
     #print(lab_map)
     cols_to_keep = ['Date', 'Return'] + labs #specification in paper
@@ -107,10 +107,10 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
-    test(1100, 100, 3, True)
-    test(1100, 100, 2, True)
-    test(1100, 100, 3, False)
-    test(1100, 100, 2, False)
+    test(1104, 100, 3, True)
+    test(1104, 100, 2, True)
+    test(1104, 100, 3, False)
+    test(1104, 100, 2, False)
 
 if __name__ == "__main__":
     main()
