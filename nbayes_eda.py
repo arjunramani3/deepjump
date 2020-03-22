@@ -5,7 +5,7 @@ import math
 import os
 from nltk.corpus import stopwords
 import numpy as np
-from nbayes import load_eng_words, load_labels
+from nbayes import load_eng_words, load_labels, load_articles
 import codecs
 from eda1 import get_augmented
 
@@ -16,39 +16,6 @@ from eda1 import get_augmented
 #   C. Populate dataframe with label (matching on slug)
 #3. Read in easy data articles and repeat
 #4. Run model
-
-
-#read in articles using import_article and labels with load_labels. Take first nwords of each article
-#and create dataframe with columns Date, Words (the words in the article), [labels] where [labels] is 
-#the set of labels kept from load_labels
-def load_articles(narts=5, nwords = 100, min_word_length = 2, filter_stop_words = True):
-    """load_articles function
-    @param narts (int): the number of articles to store in the labeled dataframe
-    @param nwords (int): the number of words to keep in each article
-    @param min_word_length (int): the minimum number of characters in a word (all words with length < min_word_length will be filtered)
-    @param filter_stop_words (boolean): a flag indicating whether to filter stop_words 
-    @return labeled_articles (DataFrame): a dataframe with aritcle clippings and associated labels"""
-    #print('narts = ' + str(narts))
-    english_words = load_eng_words()
-    stop_words = set(stopwords.words('english'))
-    labels = load_labels()
-    #print(labels.head())
-    articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
-    for i, art in enumerate(os.listdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')):
-        #print(art)
-        if i > narts: break
-        rawart=import_article(art,english_words,stop_words, min_word_length, filter_stop_words)
-        firstn=rawart.split(" ")[0:nwords]
-        firstn = " ".join(firstn) #if our input is a text with spaces
-        slug = art.split('.')[0]
-        articles.loc[i] = slug, firstn
-    #print(labels.head())
-    articles['Date'] = articles['Date'].str.replace('_', '/')
-    #print(articles['Date'])
-    articles['Date'] = pd.to_datetime(articles['Date'], errors='coerce', format='%Y/%m/%d') 
-    labeled_articles = labels.merge(articles, left_on = 'Date', right_on = 'Date')
-    #print(len(labeled_articles))
-    return labeled_articles
 
 def load_eda(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True):
     """load_eda function

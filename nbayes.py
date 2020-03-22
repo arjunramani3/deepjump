@@ -30,7 +30,7 @@ def load_labels():
         @returns labels (dataframe of slug, label) tuples"""
 
     labels = pd.read_csv('/Users/arjun/Documents/cs224n/deepjump/jumps_by_day.csv')
-    labs = ['Commodities', 'Corporate', 'Govspend', 'Macro', 'Monetary', 'Sovmil']
+    labs = ['Corporate', 'Govspend', 'Macro', 'Monetary', 'Sovmil']
     lab_map = {name : i for i, name in enumerate(labs)} #Create dicitonary mapping labs to indices
     #print(lab_map)
     cols_to_keep = ['Date', 'Return'] + labs #specification in paper
@@ -56,6 +56,7 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
     english_words = load_eng_words()
     stop_words = set(stopwords.words('english'))
     labels = load_labels()
+    print('len(labels = ' + str(len(labels)))
     #print(labels.head())
     articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
     for i, art in enumerate(os.listdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')):
@@ -64,7 +65,9 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
         rawart=import_article(art, english_words, stop_words, min_word_length, filter_stop_words)
         #print(len(rawart.split(" ")))
         #print("RAW ARTICLE: " + str(rawart))
-        firstn=rawart.split(" ")[0:nwords]
+        rawart=rawart.split(" ")
+        #if len(rawart) < nwords: break
+        firstn = rawart[:nwords]
         firstn = " ".join(firstn) #if our input is a text with spaces
         #print(firstn)
         slug = art.split('.')[0]
@@ -73,8 +76,9 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
     articles['Date'] = articles['Date'].str.replace('_', '/')
     #print(articles['Date'])
     articles['Date'] = pd.to_datetime(articles['Date'], errors='coerce', format='%Y/%m/%d') 
+    print('len(articles) = ' + str(len(articles)))
     labeled_articles = labels.merge(articles, left_on = 'Date', right_on = 'Date')
-    print(len(labeled_articles))
+    print('len(labeled_articles) = ' + str(len(labeled_articles)))
     return labeled_articles
 
 def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
@@ -107,10 +111,15 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
-    test(1100, 100, 3, True)
-    test(1100, 100, 2, True)
-    test(1100, 100, 3, False)
-    test(1100, 100, 2, False)
+    test(1104, 100, 3, True)
+    test(1104, 100, 2, True)
+    test(1104, 100, 1, True)
+    test(1104, 150, 3, True)
+    test(1104, 200, 3, True)
+    test(1104, 250, 3, True)
+    test(1104, 300, 3, True)
+    test(1104, 350, 3, True)
+    test(1104, 400, 3, True)
 
 if __name__ == "__main__":
     main()
