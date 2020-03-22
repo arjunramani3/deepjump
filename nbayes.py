@@ -56,6 +56,7 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
     english_words = load_eng_words()
     stop_words = set(stopwords.words('english'))
     labels = load_labels()
+    print('len(labels = ' + str(len(labels)))
     #print(labels.head())
     articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
     for i, art in enumerate(os.listdir('/Users/arjun/Documents/cs224n/deepjump/WSJ_txt')):
@@ -73,8 +74,9 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
     articles['Date'] = articles['Date'].str.replace('_', '/')
     #print(articles['Date'])
     articles['Date'] = pd.to_datetime(articles['Date'], errors='coerce', format='%Y/%m/%d') 
+    print('len(articles) = ' + str(len(articles)))
     labeled_articles = labels.merge(articles, left_on = 'Date', right_on = 'Date')
-    print(len(labeled_articles))
+    print('len(labeled_articles) = ' + str(len(labeled_articles)))
     return labeled_articles
 
 def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
@@ -107,10 +109,10 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
-    test(1104, 100, 3, True)
-    test(1104, 100, 2, True)
-    test(1104, 100, 3, False)
-    test(1104, 100, 2, False)
+    test(1104, 200, 3, True)
+    test(1104, 200, 2, True)
+    test(1104, 200, 3, False)
+    test(1104, 200, 2, False)
 
 if __name__ == "__main__":
     main()
