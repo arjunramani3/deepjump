@@ -65,7 +65,9 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
         rawart=import_article(art, english_words, stop_words, min_word_length, filter_stop_words)
         #print(len(rawart.split(" ")))
         #print("RAW ARTICLE: " + str(rawart))
-        firstn=rawart.split(" ")[0:nwords]
+        rawart=rawart.split(" ")
+        #if len(rawart) < nwords: break
+        firstn = rawart[:nwords]
         firstn = " ".join(firstn) #if our input is a text with spaces
         #print(firstn)
         slug = art.split('.')[0]
@@ -109,10 +111,15 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
+    test(1104, 100, 3, True)
+    test(1104, 100, 2, True)
+    test(1104, 100, 1, True)
+    test(1104, 150, 3, True)
     test(1104, 200, 3, True)
-    test(1104, 200, 2, True)
-    test(1104, 200, 3, False)
-    test(1104, 200, 2, False)
+    test(1104, 250, 3, True)
+    test(1104, 300, 3, True)
+    test(1104, 350, 3, True)
+    test(1104, 400, 3, True)
 
 if __name__ == "__main__":
     main()
