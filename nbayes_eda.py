@@ -45,10 +45,10 @@ def load_eda(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = T
 
 def test(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50):
     #####Implementing Naive Bayes w/EDA#####
-    print('running with parameters' + str((narts, nwords, min_word_length, filter_stop_words)))
+    print('running with parameters' + str((narts, nwords, min_word_length, filter_stop_words, replace_words)))
     labeled_articles = load_articles(narts, nwords, min_word_length, filter_stop_words) #baseline spec is (1000,100)
     from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=2018, test_size = .1)
+    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=2018, test_size = .15)
 
     X_train = list(X_train)
     print('old train size = ' + str(len(X_train)))
@@ -77,8 +77,8 @@ def test(narts = 5, nwords = 100, min_word_length = 2, filter_stop_words = True,
     # print(pd.Series(predictions).value_counts())
 
 if __name__ == "__main__":
-    test(narts = 1100, nwords = 100, min_word_length = 2, filter_stop_words = True, replace_words = 50)
-    test(1100, 100, 3, True, 50)
-    test(1100, 100, 2, True, 50)
-    test(1100, 100, 3, False, 50)
-    test(1100, 100, 2, False, 50)
+    test(1104, 100, 3, True, 0)
+    test(1104, 100, 3, True, 10)
+    test(1104, 100, 3, True, 25)
+    test(1104, 100, 3, True, 40)
+

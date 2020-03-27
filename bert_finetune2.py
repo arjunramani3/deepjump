@@ -65,7 +65,7 @@ from transformers import DistilBertForSequenceClassification, BertForSequenceCla
 
 model = DistilBertForSequenceClassification.from_pretrained(
     "distilbert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
-    num_labels = 6, # The number of output labels--2 for binary classification.
+    num_labels = 5, # The number of output labels--2 for binary classification.
                     # You can increase this for multi-class tasks.   
     output_attentions = False, # Whether the model returns attentions weights.
     output_hidden_states = False, # Whether the model returns all hidden-states.

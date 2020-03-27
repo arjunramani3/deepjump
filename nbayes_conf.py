@@ -1,4 +1,4 @@
-#Implement naive bayes
+#Implement naive bayes for journalist confidence
 from import_art_stop_allyrs_v2 import import_article
 import pandas as pd
 import math
@@ -30,16 +30,12 @@ def load_labels():
         @returns labels (dataframe of slug, label) tuples"""
 
     labels = pd.read_csv('/Users/arjun/Documents/cs224n/deepjump/jumps_by_day.csv')
-    labs = ['Corporate', 'Govspend', 'Macro', 'Monetary', 'Sovmil']
-    lab_map = {name : i for i, name in enumerate(labs)} #Create dicitonary mapping labs to indices
     #print(lab_map)
-    cols_to_keep = ['Date', 'Return'] + labs #specification in paper
+    cols_to_keep = ['Date', 'Return', '(#) Journalist Confidence'] #specification in paper
     labels = labels[cols_to_keep]
     labels['Date'] = pd.to_datetime(labels['Date'], errors='coerce', infer_datetime_format=True)
-    labels['Sum'] = labels[labs].sum(axis=1)
-    labels = labels[labels['Sum'] > 0] #filters out all rows that do not have a label in labs
-    labels['Max'] = labels[labs].idxmax(axis=1) #Max column has label to keep
-    labels['Max'] = labels['Max'].map(lab_map)
+    labels = labels.rename(columns={'(#) Journalist Confidence': 'Confidence'})
+    labels = labels.round({'Confidence': 0})
     return labels
 
 #read in articles using import_article and labels with load_labels. Take first nwords of each article
@@ -57,6 +53,7 @@ def load_articles(narts=5, nwords = 100, min_word_length = 3, filter_stop_words 
     stop_words = set(stopwords.words('english'))
     labels = load_labels()
     print('len(labels = ' + str(len(labels)))
+    print(pd.Series(labels['Confidence']).value_counts())
     #print(labels.head())
     articles = pd.DataFrame(np.zeros((narts, 2)), columns = ['Date', 'Words'])
     i = 0
@@ -91,7 +88,7 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
     print(labeled_articles.head())
     print(len(labeled_articles))
     from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Max'], random_state=2018, test_size = .10)
+    X_train, X_test, y_train, y_test = train_test_split(labeled_articles['Words'], labeled_articles['Confidence'], random_state=2018, test_size = .10)
     print('train size = ' + str(len(X_train)))
     print('test size = ' + str(len(y_test)))
 
@@ -120,22 +117,22 @@ def test(narts=5, nwords = 100, min_word_length = 3, filter_stop_words = True):
 
 def main():
     #Run Naive Bayes and print output with various parameters
-    test(1500, 100, 3, True)
+    # test(1104, 50, 3, True)
     # test(100, 100, 3, True)
     # test(300, 100, 3, True)
     # test(500, 100, 3, True)
     # test(700, 100, 3, True)
     # test(900, 100, 3, True)
     # test(1000, 100, 3, True)
-    test(1200, 50, 3, True)
     test(1200, 100, 3, True)
-    test(1200, 150, 3, True)
-    test(1200, 200, 3, True)
-    test(1200, 250, 3, True)
-    test(1200, 300, 3, True)
-    test(1200, 350, 3, True)
-    test(1200, 400, 3, True)
-    test(1200, 450, 3, True)
+    # test(1104, 150, 3, True)
+    # test(1104, 200, 3, True)
+    # test(1104, 250, 3, True)
+    # test(1104, 300, 3, True)
+    # test(1104, 350, 3, True)
+    # test(1104, 400, 3, True)
+    # test(1104, 450, 3, True)
+    # test(1104, 500, 3, True)
 
 if __name__ == "__main__":
     main()
